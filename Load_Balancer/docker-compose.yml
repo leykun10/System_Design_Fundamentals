@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+
+  load_balancer:
+    image: haproxy:latest
+    volumes:
+      - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
+    depends_on:
+      - server1
+      - server2
+    ports:
+      - "9000:9000"
+
+
+  server1:
+    build: .
+    restart: always
+    env_file:
+      - ./server1.env
+    command: "node index.js"
+    ports:
+      - "5020:5020" 
+
+
+
+  server2:
+    build: .
+    restart: always
+    env_file:
+      - ./server2.env
+    command: "node index.js"
+    ports:
+      - "5010:5010"
+
